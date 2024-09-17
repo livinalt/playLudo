@@ -46,9 +46,27 @@ contract PlayLudo {
         allPlayers.push(newPlayer);
     }
 
-     function playGame() external{
+     function playGame(uint256 pieceIndex) external {
+        require(playerCount == maxPlayers, "Waiting forother to join.");
+        require(allPlayers[currentTurn].playerAddress == msg.sender, "wait, not your turn.");
+        require(pieceIndex < 4, "Invalid");
 
-     }
+        uint8 diceRoll = uint8((block.timestamp % 6) + 1);
+
+        Player storage currentPlayer = allPlayers[currentTurn];
+        uint8 currentPiecePosition = currentPlayer.piecePositions[pieceIndex];
+
+        if (currentPiecePosition == 0) {
+            require(diceRoll == 6, "You must roll a 6 start.");
+        }
+
+        currentPlayer.piecePositions[pieceIndex] += diceRoll;
+
+        if (diceRoll != 6) {
+            nextTurn();
+        }
+    }
+
 
      function exitGame() external{
 
@@ -58,6 +76,10 @@ contract PlayLudo {
      function movePosition() external{
 
      }
+
+     function nextTurn() internal {
+        currentTurn = (currentTurn + 1) % playerCount; 
+    }
 
 
 }
