@@ -21,13 +21,14 @@ contract PlayLudo {
 
     mapping(address => bool) public hasJoined;
     mapping(address => Player) public playerDetails;
+    mapping(uint8 => Player) public playerIndex;
 
     constructor(uint256 _numberOfPlayers) {
         require(_numberOfPlayers <= maxPlayers, "Max players allowed is 4.");
         maxPlayers = _numberOfPlayers;
     }
 
-    function joinGame(string memory _color) external {
+    function joinGame() external {
 
         require(!hasJoined[msg.sender], "already joined  game.");
         
@@ -36,6 +37,9 @@ contract PlayLudo {
         hasJoined[msg.sender] = true;
 
         playerCount++;
+
+        //use chainlink to get colors
+        //_color = "";
 
         Player memory newPlayer = Player({
             playerAddress: msg.sender,
@@ -46,21 +50,18 @@ contract PlayLudo {
         allPlayers.push(newPlayer);
     }
 
-     function playGame(uint256 pieceIndex) external {
+     function playGame() external {
+
+        // 
         require(playerCount == maxPlayers, "Waiting forother to join.");
         require(allPlayers[currentTurn].playerAddress == msg.sender, "wait, not your turn.");
-        require(pieceIndex < 4, "Invalid");
+        require(playerIndex[msg.sender] < 4, "Invalid");
 
         uint8 diceRoll = uint8((block.timestamp % 6) + 1);
 
         Player storage currentPlayer = allPlayers[currentTurn];
-        uint8 currentPiecePosition = currentPlayer.piecePositions[pieceIndex];
-
-        if (currentPiecePosition == 0) {
-            require(diceRoll == 6, "You must roll a 6 start.");
-        }
-
-        currentPlayer.piecePositions[pieceIndex] += diceRoll;
+        //
+        
 
         if (diceRoll != 6) {
             nextTurn();
@@ -69,6 +70,10 @@ contract PlayLudo {
 
 
      function exitGame() external{
+
+        hasJoined[msg.sender] = true;
+
+        playerCount --;
 
      }
 
