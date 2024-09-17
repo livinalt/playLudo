@@ -1,34 +1,50 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.24;
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.24;
 
-// Uncomment this line to use console.log
-// import "hardhat/console.sol";
+contract PlayLudo{
+    /* 
+    this contracts lets us play ludo
+    
+    Write a contract that uses a pseudorandom generator to play ludo. 
+    Basically, implement a simple version of the ludo map and also focus mainly on the dice throwing algorithm. 
+    There is no strict design to this. You can use any design method you want.
 
-contract Lock {
-    uint public unlockTime;
-    address payable public owner;
+    Basically players begi the game by
 
-    event Withdrawal(uint amount, uint when);
+    1. joining and choosing colors
+    2. rolls dice
+    
+     */
+    uint256 numberOfPlayers;
+     struct Player{
+        address player;
+        string color;
+     }
 
-    constructor(uint _unlockTime) payable {
-        require(
-            block.timestamp < _unlockTime,
-            "Unlock time should be in the future"
-        );
+     Player[] allPlayers;
+     
+     mapping(address => bool) hasJoined;
+     mapping(uint256 => Player) playerID;
 
-        unlockTime = _unlockTime;
-        owner = payable(msg.sender);
-    }
+     constructor()
 
-    function withdraw() public {
-        // Uncomment this line, and the import of "hardhat/console.sol", to print a log in your terminal
-        // console.log("Unlock time is %o and block timestamp is %o", unlockTime, block.timestamp);
+     function joinGame() external{
+        // require the msg.sender has not joined
 
-        require(block.timestamp >= unlockTime, "You can't withdraw yet");
-        require(msg.sender == owner, "You aren't the owner");
+     }
 
-        emit Withdrawal(address(this).balance, block.timestamp);
+     function playGame() external{
 
-        owner.transfer(address(this).balance);
-    }
+     }
+
+     function exitGame() external{
+
+     }
+
+
+     function movePosition() external{
+
+     }
+
+
 }
